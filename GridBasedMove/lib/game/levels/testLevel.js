@@ -1,0 +1,6 @@
+ig.module( 'game.levels.testLevel' )
+.requires( 'impact.image','game.entities.gridMover' )
+.defines(function(){
+LevelTestLevel=/*JSON[*/{"entities":[{"type":"EntityGridMover","x":192,"y":320}],"layer":[{"name":"background","width":8,"height":12,"linkWithCollision":false,"visible":1,"tilesetName":"media/64square.png","repeat":false,"preRender":false,"distance":"1","tilesize":64,"foreground":false,"data":[[0,0,0,0,0,0,0,0],[0,1,1,1,1,1,1,0],[0,1,1,1,1,1,1,0],[0,1,1,1,1,1,1,0],[0,1,1,1,1,1,1,0],[0,1,1,1,1,1,1,0],[0,1,1,1,1,1,1,0],[0,1,1,1,1,1,1,0],[0,1,1,1,1,1,1,0],[0,1,1,1,1,1,1,0],[0,1,1,1,1,1,1,0],[0,0,0,0,0,0,0,0]]},{"name":"collision","width":8,"height":12,"linkWithCollision":false,"visible":true,"tilesetName":"","repeat":false,"preRender":false,"distance":1,"tilesize":64,"foreground":false,"data":[[1,1,1,1,1,1,1,1],[1,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,1],[1,1,1,1,1,1,1,1]]}]}/*]JSON*/;
+LevelTestLevelResources=[new ig.Image('media/64square.png')];
+});
