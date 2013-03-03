@@ -8,7 +8,7 @@ ig.module('game.entities.gridMover')
 		moving: false,
 		smoothTransition: true,
 		center: null,
-		moveDuration: 0.3,
+		moveDuration: 0.25,
 		moveTimer: null,
 
 		init: function(x, y, settings){
@@ -58,8 +58,7 @@ ig.module('game.entities.gridMover')
 					}
 					
 					if(this.smoothTransition){
-						this.moving = true;
-						this.moveTimer.reset();
+						
 					}
 				}
 			}else if(this.moveTimer.delta() > this.moveDuration){
@@ -76,38 +75,70 @@ ig.module('game.entities.gridMover')
 		},
 
 		moveRight: function(){
-			if(!this.smoothTransition){
-				this.pos.x += this.size.x;
-			}else{
-				this.prevPos = {x: this.pos.x, y: this.pos.y};
-				this.nextPos = {x: this.pos.x + this.size.x, y: this.pos.y};
+			var res = ig.game.collisionMap.trace( 
+				this.pos.x, this.pos.y, this.size.x, 0, this.size.x-1, this.size.y-1
+			);
+
+			if(!res.collision.x){
+				if(!this.smoothTransition){
+					this.pos.x += this.size.x;
+				}else{
+					this.prevPos = {x: this.pos.x, y: this.pos.y};
+					this.nextPos = {x: this.pos.x + this.size.x, y: this.pos.y};
+					this.moving = true;
+					this.moveTimer.reset();
+				}
 			}
 		},
 
 		moveLeft: function(){
-			if(!this.smoothTransition){
-				this.pos.x -= this.size.x;
-			}else{
-				this.prevPos = {x: this.pos.x, y: this.pos.y};
-				this.nextPos = {x: this.pos.x - this.size.x, y: this.pos.y};
+			var res = ig.game.collisionMap.trace( 
+				this.pos.x, this.pos.y, -this.size.x, 0, this.size.x, this.size.y
+			);
+
+			if(!res.collision.x){
+				if(!this.smoothTransition){
+					this.pos.x -= this.size.x;
+				}else{
+					this.prevPos = {x: this.pos.x, y: this.pos.y};
+					this.nextPos = {x: this.pos.x - this.size.x, y: this.pos.y};
+					this.moving = true;
+					this.moveTimer.reset();
+				}
 			}
 		},
 
 		moveUp: function(){
-			if(!this.smoothTransition){
-				this.pos.y -= this.size.y;
-			}else{
-				this.prevPos = {x: this.pos.x, y: this.pos.y};
-				this.nextPos = {x: this.pos.x, y: this.pos.y - this.size.y};
+			var res = ig.game.collisionMap.trace( 
+				this.pos.x, this.pos.y, 0, -this.size.y, this.size.x, this.size.y
+			);
+
+			if(!res.collision.y){
+				if(!this.smoothTransition){
+					this.pos.y -= this.size.y;
+				}else{
+					this.prevPos = {x: this.pos.x, y: this.pos.y};
+					this.nextPos = {x: this.pos.x, y: this.pos.y - this.size.y};
+					this.moving = true;
+					this.moveTimer.reset();
+				}
 			}
 		},
 
 		moveDown: function(){
-			if(!this.smoothTransition){
-				this.pos.y += this.size.y;
-			}else{
-				this.prevPos = {x: this.pos.x, y: this.pos.y};
-				this.nextPos = {x: this.pos.x, y: this.pos.y + this.size.y};
+			var res = ig.game.collisionMap.trace( 
+				this.pos.x, this.pos.y, 0, this.size.y, this.size.x-1, this.size.y-1
+			);
+
+			if(!res.collision.y){
+				if(!this.smoothTransition){
+					this.pos.y += this.size.y;
+				}else{
+					this.prevPos = {x: this.pos.x, y: this.pos.y};
+					this.nextPos = {x: this.pos.x, y: this.pos.y + this.size.y};
+					this.moving = true;
+					this.moveTimer.reset();
+				}
 			}
 		},
 	});
