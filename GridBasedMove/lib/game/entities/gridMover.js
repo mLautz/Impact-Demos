@@ -6,8 +6,10 @@ ig.module('game.entities.gridMover')
 		animSheet: new ig.AnimationSheet('media/64char.png', 64, 64),
 		size: {x: 64, y:64},
 		moving: false,
-		smoothTransition: false,
+		smoothTransition: true,
 		center: null,
+		moveDuration: 0.3,
+		moveTimer: null,
 
 		init: function(x, y, settings){
 			this.parent(x, y, settings);
@@ -16,6 +18,9 @@ ig.module('game.entities.gridMover')
 
 			ig.input.bind(ig.KEY.MOUSE1, 'click');
 			this.center = {x: this.pos.x + this.size.x/2, y: this.pos.y + this.size.y/2};
+			if(this.smoothTransition){
+				this.moveTimer = new ig.Timer();
+			}
 		},
 
 		update: function(){
@@ -31,14 +36,12 @@ ig.module('game.entities.gridMover')
 					if(angle < 0){
 						angle += 2*Math.PI;
 					}
+
 					//convert to degrees and offset by 45
 					angle = (angle * 180/Math.PI + 45)%360;
-					
 
 					//select a movement function based on click direction
 					angle = Math.floor(angle/90);
-
-					console.log("Angle = "+angle);
 
 					if(angle == 0){
 						this.moveRight();
@@ -50,27 +53,62 @@ ig.module('game.entities.gridMover')
 						this.moveDown();
 					}
 					
-					this.center = {x: this.pos.x + this.size.x/2, y: this.pos.y + this.size.y/2};
+					if(!this.smoothTransition){
+						this.center = {x: this.pos.x + this.size.x/2, y: this.pos.y + this.size.y/2};
+					}
+					
+					if(this.smoothTransition){
+						this.moving = true;
+						this.moveTimer.reset();
+					}
 				}
+			}else if(this.moveTimer.delta() > this.moveDuration){
+				this.moving = false;
+				this.pos = this.nextPos;
+				this.center = {x: this.pos.x + this.size.x/2, y: this.pos.y + this.size.y/2};
+			}else{
+				var moveDelta = this.moveTimer.delta()/this.moveDuration;
+				this.pos.x = this.prevPos.x + ((this.nextPos.x - this.prevPos.x) * moveDelta);
+				this.pos.y = this.prevPos.y + ((this.nextPos.y - this.prevPos.y) * moveDelta);
 			}
 
 			this.parent();
 		},
 
 		moveRight: function(){
-			this.pos.x += this.size.x;
+			if(!this.smoothTransition){
+				this.pos.x += this.size.x;
+			}else{
+				this.prevPos = {x: this.pos.x, y: this.pos.y};
+				this.nextPos = {x: this.pos.x + this.size.x, y: this.pos.y};
+			}
 		},
 
 		moveLeft: function(){
-			this.pos.x -= this.size.x;
+			if(!this.smoothTransition){
+				this.pos.x -= this.size.x;
+			}else{
+				this.prevPos = {x: this.pos.x, y: this.pos.y};
+				this.nextPos = {x: this.pos.x - this.size.x, y: this.pos.y};
+			}
 		},
 
 		moveUp: function(){
-			this.pos.y -= this.size.y;
+			if(!this.smoothTransition){
+				this.pos.y -= this.size.y;
+			}else{
+				this.prevPos = {x: this.pos.x, y: this.pos.y};
+				this.nextPos = {x: this.pos.x, y: this.pos.y - this.size.y};
+			}
 		},
 
 		moveDown: function(){
-			this.pos.y += this.size.y;
+			if(!this.smoothTransition){
+				this.pos.y += this.size.y;
+			}else{
+				this.prevPos = {x: this.pos.x, y: this.pos.y};
+				this.nextPos = {x: this.pos.x, y: this.pos.y + this.size.y};
+			}
 		},
 	});
 });
